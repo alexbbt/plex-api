@@ -89,7 +89,8 @@ class PlexServer
 			switch((string)$item->attributes()['type'])
 			{
 				case 'movie':
-					$movie = new Movie();
+					$movie = Movie::hydrate(array_values((array)$item->attributes())[0]);
+
 					break;
 				default:
 					throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $item->attributes()['type']));

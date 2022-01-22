@@ -5,6 +5,7 @@
     "require": {
         "php": "^8.1",
         "ext-simplexml": "*",
+        "chindit/collection": "^1.0",
         "symfony/http-client": "^6.0"
     },
     "require-dev": {
