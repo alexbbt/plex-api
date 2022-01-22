@@ -3,7 +3,7 @@
     "description": "A simple API library to interact with a Plex server",
     "type": "library",
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "ext-simplexml": "*",
         "symfony/http-client": "^6.0"
     },

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Chindit\PlexApi;
 
+use Chindit\PlexApi\Enum\LibraryType;
+use Chindit\PlexApi\Model\Library;
 use Chindit\PlexApi\Model\Server;
 use Chindit\PlexApi\Service\Connector;
 
@@ -49,5 +51,33 @@ class PlexServer
 		$serverResponse = $this->connector->get('/status/sessions');
 
 		return (int)$serverResponse->attributes()['size'];
+	}
+
+	public function libraries(): array
+	{
+		$serverResponse = $this->connector->get('/library/sections');
+
+		$libraries = [];
+
+		foreach ($serverResponse->Directory as $library) {
+			$libraries[] = new Library(
+				(int)$library->attributes()['key'],
+				$library->attributes()['allowSync'] === '1',
+				(string)$library->attributes()['thumb'],
+				match ($library->attributes()['type']) {
+					'movie' => LibraryType::Movie,
+					'show' => LibraryType::Show,
+					'artist' => LibraryType::Music,
+					default => throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $library->attributes()['type']))
+				},
+				(string)$library->attributes()['title'],
+				(string)$library->attributes()['language'],
+				(new \DateTimeImmutable())->setTimestamp((int)$library->attributes()['createdAt']),
+				(new \DateTimeImmutable())->setTimestamp((int)$library->attributes()['updatedAt']),
+				(new \DateTimeImmutable())->setTimestamp((int)$library->attributes()['scannedAt']),
+				(string)$library->Location->attributes()['Location']
+			);
+		}
+		return $libraries;
 	}
 }
