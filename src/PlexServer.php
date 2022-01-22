@@ -5,6 +5,7 @@ namespace Chindit\PlexApi;
 
 use Chindit\PlexApi\Enum\LibraryType;
 use Chindit\PlexApi\Model\Library;
+use Chindit\PlexApi\Model\Movie;
 use Chindit\PlexApi\Model\Server;
 use Chindit\PlexApi\Service\Connector;
 
@@ -43,9 +44,6 @@ class PlexServer
 		return $servers;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function sessionsCount(): int
 	{
 		$serverResponse = $this->connector->get('/status/sessions');
@@ -79,5 +77,23 @@ class PlexServer
 			);
 		}
 		return $libraries;
+	}
+
+	public function library(int $libraryId)
+	{
+		$serverResponse = $this->connector->get('/library/sections/' . $libraryId . '/all');
+
+		$items = [];
+
+		foreach ($serverResponse as $item) {
+			switch((string)$item->attributes()['type'])
+			{
+				case 'movie':
+					$movie = new Movie();
+					break;
+				default:
+					throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $item->attributes()['type']));
+			}
+		}
 	}
 }
