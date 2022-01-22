@@ -4,6 +4,7 @@
     "type": "library",
     "require": {
         "php": "^8.0",
+        "ext-simplexml": "*",
         "symfony/http-client": "^6.0"
     },
     "require-dev": {

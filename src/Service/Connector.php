@@ -25,7 +25,7 @@ class Connector
 		]);
 	}
 
-	public function get(string $endpoint)
+	public function get(string $endpoint): \SimpleXMLElement
 	{
 		return simplexml_load_string($this->connection->request('GET', $endpoint)->getContent());
 	}
