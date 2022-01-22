@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Chindit\PlexApi;
 
 use Chindit\PlexApi\Model\Server;
-use Chindit\PlexApi\Model\Session;
 use Chindit\PlexApi\Service\Connector;
 
 class PlexServer
@@ -43,25 +42,12 @@ class PlexServer
 	}
 
 	/**
-	 * @return array<Session>
+	 * @return int
 	 */
-	public function sessions(): array
+	public function sessionsCount(): int
 	{
 		$serverResponse = $this->connector->get('/status/sessions');
 
-		$sessions = [];
-
-		foreach ($serverResponse as $session) {
-			//dd($session);
-			$sessions[] = new Session(
-				(string)$server->attributes()['name'],
-				(string)$server->attributes()['host'],
-				(string)$server->attributes()['address'],
-				(int)$server->attributes()['port'],
-				(string)$server->attributes()['machineIdentifier'],
-				(string)$server->attributes()['version']
-			);
-		}
-		return $sessions;
+		return (int)$serverResponse->attributes()['size'];
 	}
 }
