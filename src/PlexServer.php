@@ -108,7 +108,7 @@ class PlexServer
 							'videoCodec' => (string)$mediaAttributes['videoCodec'],
 							'resolution' => (int)$mediaAttributes['videoResolution'],
 							'container' => (string)$mediaAttributes['container'],
-							'framerate' => (string)$mediaAttributes['videoFramerate'],
+							'framerate' => (string)$mediaAttributes['videoFrameRate'],
 							'profile' => (string)$mediaAttributes['videoProfile'],
 						]
 					));
