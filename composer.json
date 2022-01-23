@@ -13,7 +13,7 @@
         "phpunit/phpunit": "^9.5",
         "phpstan/phpstan": "^1.4"
     },
-    "license": "AGPL v3",
+    "license": "GPL-3.0-or-later",
     "autoload": {
         "psr-4": {
             "Chindit\\PlexApi\\": "src/"
