@@ -83,9 +83,9 @@ final class Movie
 		return $this->thumb;
 	}
 
-	public function getDuration(): string
+	public function getDuration(): int
 	{
-		return $this->duration;
+		return (int)round(((int)$this->duration/1000));
 	}
 
 	public function getCreatedAt(): \DateTimeImmutable

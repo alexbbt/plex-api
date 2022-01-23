@@ -104,12 +104,12 @@ class PlexServer
 							'height' => (int)$mediaAttributes['height'],
 							'aspectRatio' => (float)$mediaAttributes['aspectRatio'],
 							'audioChannels' => (int)$mediaAttributes['audioChannels'],
-							'audioCodec' => $mediaAttributes['audioCodec'],
-							'videoCodec' => $mediaAttributes['videoCodec'],
+							'audioCodec' => (string)$mediaAttributes['audioCodec'],
+							'videoCodec' => (string)$mediaAttributes['videoCodec'],
 							'resolution' => (int)$mediaAttributes['videoResolution'],
-							'container' => $mediaAttributes['container'],
-							'framerate' => $mediaAttributes['framerate'],
-							'profile' => $mediaAttributes['profile'],
+							'container' => (string)$mediaAttributes['container'],
+							'framerate' => (string)$mediaAttributes['videoFramerate'],
+							'profile' => (string)$mediaAttributes['videoProfile'],
 						]
 					));
 					break;
