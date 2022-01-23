@@ -132,7 +132,7 @@ class PlexServer
 			switch((string)$episode->attributes()['type'])
 			{
 				case 'episode':
-					$episodes[] = Episode::hydrate(
+					$episodes[] = new Episode(
 						array_merge(
 							XmlParser::getGlobalAttributes($episode),
 							XmlParser::getTechnicalAttributes($episode),
