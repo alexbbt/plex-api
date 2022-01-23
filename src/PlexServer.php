@@ -131,7 +131,7 @@ class PlexServer
 	/**
 	 * @return array<Episode>
 	 */
-	public function getShowEpisodes(int $showId): array
+	private function getShowEpisodes(int $showId): array
 	{
 		$serverResponse = $this->connector->get('/library/metadata/' . $showId . '/allLeaves');
 
