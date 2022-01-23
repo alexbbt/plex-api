@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Chindit\PlexApi;
 
-use Chindit\Collection\Collection;
 use Chindit\PlexApi\Enum\LibraryType;
 use Chindit\PlexApi\Model\Episode;
 use Chindit\PlexApi\Model\Library;
@@ -12,7 +11,6 @@ use Chindit\PlexApi\Model\Server;
 use Chindit\PlexApi\Model\Show;
 use Chindit\PlexApi\Service\Connector;
 use Chindit\PlexApi\Service\XmlParser;
-use PHPUnit\Util\Xml;
 
 class PlexServer
 {
@@ -100,16 +98,18 @@ class PlexServer
 			switch((string)$item->attributes()['type'])
 			{
 				case 'movie':
-					$items[] = Movie::hydrate(array_merge(
+					$items[] = new Movie(array_merge(
 						XmlParser::getGlobalAttributes($item),
 						XmlParser::getTechnicalAttributes($item),
 					));
 					break;
 				case 'show':
-					$show = Show::hydrate(array_merge(
+					$items[] = new Show(array_merge(
 						XmlParser::getGlobalAttributes($item),
+						[
+							'episodes' => $this->getShowEpisodes((int)$item->attributes()['ratingKey']),
+						],
 					));
-					$show->episodes = $this->getShowEpisodes($show->getId());
 				default:
 					throw new \InvalidArgumentException(sprintf("Element type %s in not supported", $item->attributes()['type']));
 			}

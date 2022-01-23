@@ -11,21 +11,18 @@ final class Episode
 	public readonly int $season;
 	public readonly int $episode;
 
-	public static function hydrate(array $values): self
+	public function __construct(array $values)
 	{
-		$movie = new self();
 		foreach ($values as $name => $value)
 		{
 			if ($name === 'addedAt') {
 				$name = 'createdAt';
 				$value = (new \DateTimeImmutable())->setTimestamp((int)$value);
 			}
-			if (property_exists($movie, $name)) {
-				$movie->$name = $value;
+			if (property_exists($this, $name)) {
+				$this->$name = $value;
 			}
 		}
-
-		return $movie;
 	}
 
 	/**

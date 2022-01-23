@@ -4,18 +4,18 @@ namespace Chindit\PlexApi\Model;
 
 abstract class Media
 {
-	public readonly string $ratingKey;
-	public readonly string $studio;
-	public readonly string $contentRating;
-	public readonly string $rating;
-	public readonly string $title;
-	public readonly string $summary;
-	public readonly string $year;
-	public readonly string $thumb;
-	public readonly string $duration;
-	public readonly \DateTimeImmutable $createdAt;
-	public readonly array $actors;
-	public readonly array $genres;
+	protected readonly string $ratingKey;
+	protected readonly string $studio;
+	protected readonly string $contentRating;
+	protected readonly string $rating;
+	protected readonly string $title;
+	protected readonly string $summary;
+	protected readonly string $year;
+	protected readonly string $thumb;
+	protected readonly string $duration;
+	protected readonly \DateTimeImmutable $createdAt;
+	protected readonly array $actors;
+	protected readonly array $genres;
 
 	public function getId(): int
 	{
