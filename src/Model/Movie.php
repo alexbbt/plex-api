@@ -7,9 +7,9 @@ final class Movie extends Media
 {
 	use File;
 
-	public readonly array $directors;
-	public readonly array $countries;
-	public readonly array $writers;
+	private array $directors;
+	private array $countries;
+	private array $writers;
 
 	public function __construct(array $values)
 	{

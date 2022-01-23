@@ -5,9 +5,9 @@ namespace Chindit\PlexApi\Model;
 
 final class Show extends Media
 {
-	public readonly int $seasonCount;
-	public readonly int $totalEpisodes;
-	public readonly array $episodes;
+	private int $seasonCount;
+	private int $totalEpisodes;
+	private array $episodes;
 
 	public function __construct(array $values)
 	{

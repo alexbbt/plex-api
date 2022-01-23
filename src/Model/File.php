@@ -5,17 +5,17 @@ namespace Chindit\PlexApi\Model;
 
 trait File
 {
-	public readonly int $bitrate;
-	public readonly int $width;
-	public readonly int $height;
-	public readonly float $aspectRatio;
-	public readonly int $audioChannels;
-	public readonly string $audioCodec;
-	public readonly string $videoCodec;
-	public readonly int $resolution;
-	public readonly string $container;
-	public readonly string $framerate;
-	public readonly string $profile;
+	private int $bitrate;
+	private int $width;
+	private int $height;
+	private float $aspectRatio;
+	private int $audioChannels;
+	private string $audioCodec;
+	private string $videoCodec;
+	private int $resolution;
+	private string $container;
+	private string $framerate;
+	private string $profile;
 
 	public function getBitrate(): int
 	{

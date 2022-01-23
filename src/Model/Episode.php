@@ -6,10 +6,10 @@ final class Episode
 {
 	use File;
 
-	public readonly array $directors;
-	public readonly array $writers;
-	public readonly int $season;
-	public readonly int $episode;
+	private array $directors;
+	private array $writers;
+	private int $season;
+	private int $episode;
 
 	public function __construct(array $values)
 	{
