@@ -110,6 +110,7 @@ class PlexServer
 							'episodes' => $this->getShowEpisodes((int)$item->attributes()['ratingKey']),
 						],
 					));
+					break;
 				default:
 					throw new \InvalidArgumentException(sprintf("Element type %s in not supported", $item->attributes()['type']));
 			}
