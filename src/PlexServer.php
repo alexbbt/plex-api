@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Chindit\PlexApi;
 
+use Chindit\Collection\Collection;
 use Chindit\PlexApi\Enum\LibraryType;
 use Chindit\PlexApi\Model\Library;
 use Chindit\PlexApi\Model\Movie;
@@ -89,8 +90,14 @@ class PlexServer
 			switch((string)$item->attributes()['type'])
 			{
 				case 'movie':
-					$movie = Movie::hydrate(array_values((array)$item->attributes())[0]);
-
+					$movie = Movie::hydrate(array_merge(
+						array_values((array)$item->attributes())[0],
+						['genres' => (new Collection($item->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+						['directors' => (new Collection($item->xpath('Director')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+						['writers' => (new Collection($item->xpath('Writer')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+						['countries' => (new Collection($item->xpath('Country')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+						['actors' => (new Collection($item->xpath('Role')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+					));
 					break;
 				default:
 					throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $item->attributes()['type']));

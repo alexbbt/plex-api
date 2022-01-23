@@ -14,6 +14,11 @@ final class Movie
 	public readonly string $thumb;
 	public readonly string $duration;
 	public readonly \DateTimeImmutable $createdAt;
+	public readonly array $directors;
+	public readonly array $actors;
+	public readonly array $countries;
+	public readonly array $writers;
+	public readonly array $genres;
 
 	public static function hydrate(array $values): self
 	{
