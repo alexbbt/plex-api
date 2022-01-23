@@ -6,16 +6,21 @@ final class Episode
 {
 	use File;
 
+	/** @var array<int, string> */
 	private array $directors;
+	/** @var array<int, string> */
 	private array $writers;
 	private int $season;
 	private int $episode;
 
+	/**
+	 * @param array<string, mixed> $values
+	 */
 	public function __construct(array $values)
 	{
 		foreach ($values as $name => $value)
 		{
-			if ($name === 'addedAt') {
+			if ($name === 'addedAt' && is_string($value)) {
 				$name = 'createdAt';
 				$value = (new \DateTimeImmutable())->setTimestamp((int)$value);
 			}

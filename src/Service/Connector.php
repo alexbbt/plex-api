@@ -5,14 +5,18 @@ namespace Chindit\PlexApi\Service;
 
 
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @internal
  */
 class Connector
 {
-	private $connection;
+	private HttpClientInterface $connection;
 
+	/**
+	 * @param array<string, mixed> $options
+	 */
 	public function __construct(
 		private string $host,
 		private string $token,
@@ -31,6 +35,11 @@ class Connector
 
 	public function get(string $endpoint): \SimpleXMLElement
 	{
-		return simplexml_load_string($this->connection->request('GET', $endpoint)->getContent());
+		$response = simplexml_load_string($this->connection->request('GET', $endpoint)->getContent());
+		if (!$response) {
+			throw new \UnexpectedValueException(sprintf('Unable to call %s endpoint on plex server', $endpoint));
+		}
+
+		return $response;
 	}
 }

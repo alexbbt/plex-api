@@ -9,6 +9,9 @@ use Chindit\Collection\Collection;
  */
 class XmlParser
 {
+	/**
+	 * @return array<string, mixed>
+	 */
 	public static function getGlobalAttributes(\SimpleXMLElement $item): array
 	{
 		return array_merge(
@@ -23,6 +26,9 @@ class XmlParser
 		);
 	}
 
+	/**
+	 * @return array<string, mixed>
+	 */
 	public static function getTechnicalAttributes(\SimpleXMLElement $item): array
 	{
 		/** @var \SimpleXMLElement $mediaAttributes */

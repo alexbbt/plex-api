@@ -16,6 +16,9 @@ class PlexServer
 {
 	private Connector $connector;
 
+	/**
+	 * @param array<string, mixed> $options
+	 */
 	public function __construct(
 		string $host,
 		string $key,
@@ -55,6 +58,9 @@ class PlexServer
 		return (int)$serverResponse->attributes()['size'];
 	}
 
+	/**
+	 * @return array<int, Library>
+	 */
 	public function libraries(): array
 	{
 		$serverResponse = $this->connector->get('/library/sections');
@@ -83,6 +89,9 @@ class PlexServer
 		return $libraries;
 	}
 
+	/**
+	 * @return array<int, Movie|Show>
+	 */
 	public function library(int $libraryId, bool $unwatchedOnly = false): array
 	{
 		$url = '/library/sections/' . $libraryId . '/all';

@@ -1,0 +1,3 @@
+parameters:
+	ignoreErrors:
+		- "#Offset '[a-zA-Z]+' does not exist on SimpleXMLElement\\|null#"

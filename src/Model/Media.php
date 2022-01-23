@@ -14,7 +14,9 @@ abstract class Media
 	protected string $thumb;
 	protected string $duration;
 	protected \DateTimeImmutable $createdAt;
+	/** @var array<int, string> */
 	protected array $actors;
+	/** @var array<int, string> */
 	protected array $genres;
 
 	public function getId(): int
@@ -54,12 +56,12 @@ abstract class Media
 
 	public function getThumb(): string
 	{
-		return $this->thumb;
+		return $this->thumb ?? '';
 	}
 
 	public function getDuration(): int
 	{
-		return (int)round(((int)$this->duration/1000));
+		return (int)round(((int)($this->duration ?? 0)/1000));
 	}
 
 	public function getCreatedAt(): \DateTimeImmutable
