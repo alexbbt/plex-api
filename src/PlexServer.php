@@ -90,18 +90,34 @@ class PlexServer
 			switch((string)$item->attributes()['type'])
 			{
 				case 'movie':
-					$movie = Movie::hydrate(array_merge(
+					$mediaAttributes = $item->Media->attributes();
+					$items[] = Movie::hydrate(array_merge(
 						array_values((array)$item->attributes())[0],
-						['genres' => (new Collection($item->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
-						['directors' => (new Collection($item->xpath('Director')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
-						['writers' => (new Collection($item->xpath('Writer')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
-						['countries' => (new Collection($item->xpath('Country')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
-						['actors' => (new Collection($item->xpath('Role')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()],
+						['genres' => (new Collection($item->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
+						['directors' => (new Collection($item->xpath('Director')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
+						['writers' => (new Collection($item->xpath('Writer')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
+						['countries' => (new Collection($item->xpath('Country')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
+						['actors' => (new Collection($item->xpath('Role')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
+						[
+							'bitrate' => (int)$mediaAttributes['bitrate'],
+							'width' => (int)$mediaAttributes['width'],
+							'height' => (int)$mediaAttributes['height'],
+							'aspectRatio' => (float)$mediaAttributes['aspectRatio'],
+							'audioChannels' => (int)$mediaAttributes['audioChannels'],
+							'audioCodec' => $mediaAttributes['audioCodec'],
+							'videoCodec' => $mediaAttributes['videoCodec'],
+							'resolution' => (int)$mediaAttributes['videoResolution'],
+							'container' => $mediaAttributes['container'],
+							'framerate' => $mediaAttributes['framerate'],
+							'profile' => $mediaAttributes['profile'],
+						]
 					));
 					break;
 				default:
 					throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $item->attributes()['type']));
 			}
 		}
+
+		return $items;
 	}
 }
