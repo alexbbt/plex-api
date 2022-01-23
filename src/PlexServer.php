@@ -5,10 +5,14 @@ namespace Chindit\PlexApi;
 
 use Chindit\Collection\Collection;
 use Chindit\PlexApi\Enum\LibraryType;
+use Chindit\PlexApi\Model\Episode;
 use Chindit\PlexApi\Model\Library;
 use Chindit\PlexApi\Model\Movie;
 use Chindit\PlexApi\Model\Server;
+use Chindit\PlexApi\Model\Show;
 use Chindit\PlexApi\Service\Connector;
+use Chindit\PlexApi\Service\XmlParser;
+use PHPUnit\Util\Xml;
 
 class PlexServer
 {
@@ -17,10 +21,11 @@ class PlexServer
 	public function __construct(
 		string $host,
 		string $key,
-		int $port = 32400
+		int $port = 32400,
+		array $options = []
 	)
 	{
-		$this->connector = new Connector($host, $key, $port);
+		$this->connector = new Connector($host, $key, $port, $options);
 	}
 
 	/**
@@ -63,7 +68,7 @@ class PlexServer
 				(int)$library->attributes()['key'],
 				$library->attributes()['allowSync'] === '1',
 				(string)$library->attributes()['thumb'],
-				match ($library->attributes()['type']) {
+				match ((string)$library->attributes()['type']) {
 					'movie' => LibraryType::Movie,
 					'show' => LibraryType::Show,
 					'artist' => LibraryType::Music,
@@ -80,44 +85,69 @@ class PlexServer
 		return $libraries;
 	}
 
-	public function library(int $libraryId)
+	public function library(int $libraryId, bool $unwatchedOnly = false): array
 	{
-		$serverResponse = $this->connector->get('/library/sections/' . $libraryId . '/all');
+		$url = '/library/sections/' . $libraryId . '/all';
+		if ($unwatchedOnly) {
+			$url .= '?unwatched=1';
+		}
+		$serverResponse = $this->connector->get($url);
 
 		$items = [];
 
+		/** @var \SimpleXMLElement $item */
 		foreach ($serverResponse as $item) {
 			switch((string)$item->attributes()['type'])
 			{
 				case 'movie':
-					$mediaAttributes = $item->Media->attributes();
 					$items[] = Movie::hydrate(array_merge(
-						array_values((array)$item->attributes())[0],
-						['genres' => (new Collection($item->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
-						['directors' => (new Collection($item->xpath('Director')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
-						['writers' => (new Collection($item->xpath('Writer')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
-						['countries' => (new Collection($item->xpath('Country')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
-						['actors' => (new Collection($item->xpath('Role')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray()],
-						[
-							'bitrate' => (int)$mediaAttributes['bitrate'],
-							'width' => (int)$mediaAttributes['width'],
-							'height' => (int)$mediaAttributes['height'],
-							'aspectRatio' => (float)$mediaAttributes['aspectRatio'],
-							'audioChannels' => (int)$mediaAttributes['audioChannels'],
-							'audioCodec' => (string)$mediaAttributes['audioCodec'],
-							'videoCodec' => (string)$mediaAttributes['videoCodec'],
-							'resolution' => (int)$mediaAttributes['videoResolution'],
-							'container' => (string)$mediaAttributes['container'],
-							'framerate' => (string)$mediaAttributes['videoFrameRate'],
-							'profile' => (string)$mediaAttributes['videoProfile'],
-						]
+						XmlParser::getGlobalAttributes($item),
+						XmlParser::getTechnicalAttributes($item),
 					));
 					break;
+				case 'show':
+					$show = Show::hydrate(array_merge(
+						XmlParser::getGlobalAttributes($item),
+					));
+					$show->episodes = $this->getShowEpisodes($show->getId());
 				default:
-					throw new \InvalidArgumentException(sprintf("Collection type %s in not supported", $item->attributes()['type']));
+					throw new \InvalidArgumentException(sprintf("Element type %s in not supported", $item->attributes()['type']));
 			}
 		}
 
 		return $items;
+	}
+
+	/**
+	 * @return array<Episode>
+	 */
+	public function getShowEpisodes(int $showId): array
+	{
+		$serverResponse = $this->connector->get('/library/metadata/' . $showId . '/allLeaves');
+
+		$episodes = [];
+
+		/** @var \SimpleXMLElement $episode */
+		foreach ($serverResponse as $episode) {
+			switch((string)$episode->attributes()['type'])
+			{
+				case 'episode':
+					$episodes[] = Episode::hydrate(
+						array_merge(
+							XmlParser::getGlobalAttributes($episode),
+							XmlParser::getTechnicalAttributes($episode),
+							[
+								'season' => (string)$episode->attributes()[ 'parentIndex' ],
+								'episode' => (string)$episode->attributes()[ 'index' ],
+							],
+						)
+					);
+					break;
+				default:
+					throw new \InvalidArgumentException(sprintf("Show type %s in not supported", $episode->attributes()[ 'type' ]));
+			}
+		}
+
+		return $episodes;
 	}
 }

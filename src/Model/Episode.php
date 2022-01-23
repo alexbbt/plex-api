@@ -1,16 +1,15 @@
 <?php
-declare(strict_types=1);
 
 namespace Chindit\PlexApi\Model;
 
-final class Movie extends Media
+final class Episode
 {
 	use File;
 
 	public readonly array $directors;
-	public readonly array $countries;
 	public readonly array $writers;
-
+	public readonly int $season;
+	public readonly int $episode;
 
 	public static function hydrate(array $values): self
 	{
@@ -40,16 +39,18 @@ final class Movie extends Media
 	/**
 	 * @return array<string>
 	 */
-	public function getCountries(): array
-	{
-		return $this->countries;
-	}
-
-	/**
-	 * @return array<string>
-	 */
 	public function getWriters(): array
 	{
 		return $this->writers;
+	}
+
+	public function getSeason(): int
+	{
+		return $this->season;
+	}
+
+	public function getEpisode(): int
+	{
+		return $this->episode;
 	}
 }
