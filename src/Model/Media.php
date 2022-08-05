@@ -18,6 +18,77 @@ abstract class Media
 	protected array $actors;
 	/** @var array<int, string> */
 	protected array $genres;
+	protected string $audioCodec;
+	protected string $audioProfile;
+	protected string $videoCodec;
+	protected string $videoProfile;
+	protected float $aspectRatio;
+	protected int $bitrate;
+	protected int $width;
+	protected int $height;
+	protected string $videoResolution;
+	protected string $container;
+	protected string $frameRate;
+
+	public function getRatingKey(): string
+	{
+		return $this->ratingKey;
+	}
+
+	public function getAudioCodec(): string
+	{
+		return $this->audioCodec;
+	}
+
+	public function getAudioProfile(): string
+	{
+		return $this->audioProfile;
+	}
+
+	public function getVideoCodec(): string
+	{
+		return $this->videoCodec;
+	}
+
+	public function getVideoProfile(): string
+	{
+		return $this->videoProfile;
+	}
+
+	public function getAspectRatio(): float
+	{
+		return $this->aspectRatio;
+	}
+
+	public function getBitrate(): int
+	{
+		return $this->bitrate;
+	}
+
+	public function getWidth(): int
+	{
+		return $this->width;
+	}
+
+	public function getHeight(): int
+	{
+		return $this->height;
+	}
+
+	public function getVideoResolution(): string
+	{
+		return $this->videoResolution;
+	}
+
+	public function getContainer(): string
+	{
+		return $this->container;
+	}
+
+	public function getFrameRate(): string
+	{
+		return $this->frameRate;
+	}
 
 	public function getId(): int
 	{

@@ -2,7 +2,7 @@
 
 namespace Chindit\PlexApi\Model;
 
-final class Episode
+final class Episode extends Media
 {
 	use File;
 

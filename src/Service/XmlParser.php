@@ -48,4 +48,58 @@ class XmlParser
 			'profile' => (string)$mediaAttributes['videoProfile'],
 		];
 	}
+
+	/**
+	* @return array<string, mixed>
+	*/
+	public static function getArtist(\SimpleXMLElement $item): array
+	{
+		/** @var \SimpleXMLElement $mediaAttributes */
+		$mediaAttributes = $item->attributes();
+
+		return [
+			'artist' => (string)$mediaAttributes['title'],
+			'description' => (string)$mediaAttributes['summary'],
+			'thumb' => (string)$mediaAttributes['thumb'],
+			'genres' => (new Collection($item->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray(),
+			'countries' => (new Collection($item->xpath('Country')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray(),
+		];
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public static function getAlbum(\SimpleXMLElement $album): array
+	{
+		/** @var \SimpleXMLElement $mediaAttributes */
+		$mediaAttributes = $album->attributes();
+
+		return [
+			'studio' => (string)$mediaAttributes['studio'],
+			'title' => (string)$mediaAttributes['title'],
+			'thumb' => (string)$mediaAttributes['thumb'],
+			'releasedAt' => \DateTime::createFromFormat('Y-m-d', (string)$mediaAttributes['originallyAvailableAt']),
+			'genres' => (new Collection($album->xpath('Genre')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray(),
+			'directors' => (new Collection($album->xpath('Director')))->map(fn(\SimpleXMLElement $element) => (array)$element->attributes())->flatten()->toArray(),
+		];
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public static function getTrack(\SimpleXMLElement $track): array
+	{
+		/** @var \SimpleXMLElement $mediaAttributes */
+		$mediaAttributes = $track->Media->attributes();
+
+		return [
+			'duration' => (int)$mediaAttributes['duration'],
+			'title' => (string)$track->attributes()['title'],
+			'thumb' => (string)$track->attributes()['thumb'],
+			'bitrate' => (int)$mediaAttributes['bitrate'],
+			'audioChannels' => (int)$mediaAttributes['audioChannels'],
+			'audioCodec' => (string)$mediaAttributes['audioCodec'],
+			'container' => (string)$mediaAttributes['container']
+		];
+	}
 }

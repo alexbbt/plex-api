@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Chindit\PlexApi;
 
 use Chindit\PlexApi\Enum\LibraryType;
+use Chindit\PlexApi\Model\Album;
+use Chindit\PlexApi\Model\Artist;
 use Chindit\PlexApi\Model\Episode;
 use Chindit\PlexApi\Model\Library;
 use Chindit\PlexApi\Model\Movie;
+use Chindit\PlexApi\Model\MusicTrack;
 use Chindit\PlexApi\Model\Server;
 use Chindit\PlexApi\Model\Show;
 use Chindit\PlexApi\Service\Connector;
@@ -90,7 +93,7 @@ class PlexServer
 	}
 
 	/**
-	 * @return array<int, Movie|Show>
+	 * @return array<int, Movie|Show|Artist>
 	 */
 	public function library(int $libraryId, bool $unwatchedOnly = false): array
 	{
@@ -117,6 +120,14 @@ class PlexServer
 						XmlParser::getGlobalAttributes($item),
 						[
 							'episodes' => $this->getShowEpisodes((int)$item->attributes()['ratingKey']),
+						],
+					));
+					break;
+				case 'artist': // Music library
+					$items[] = new Artist(array_merge(
+						XmlParser::getArtist($item),
+						[
+							'albums' => $this->getArtistAlbums((int)$item->attributes()['ratingKey']),
 						],
 					));
 					break;
@@ -154,10 +165,67 @@ class PlexServer
 					);
 					break;
 				default:
-					throw new \InvalidArgumentException(sprintf("Show type %s in not supported", $episode->attributes()[ 'type' ]));
+					throw new \InvalidArgumentException(sprintf("Show type %s in not supported", $episode->attributes()['type']));
 			}
 		}
 
 		return $episodes;
+	}
+
+	/**
+	 * @return Album[]
+	 */
+	private function getArtistAlbums(int $artistId): array
+	{
+		$serverResponse = $this->connector->get('/library/metadata/' . $artistId . '/children');
+
+		$albums = [];
+
+		/** @var \SimpleXMLElement $album */
+		foreach ($serverResponse as $album) {
+			switch((string)$album->attributes()['type'])
+			{
+				case 'album':
+					$albums[] = new Album(
+						array_merge(
+							XmlParser::getAlbum($album),
+							[
+								'tracks' => $this->getTracksForAlbum((int)$album->attributes()['ratingKey']),
+							]
+						)
+					);
+					break;
+				default:
+					throw new \InvalidArgumentException(sprintf('Album of type %s is not supported', $album->attributes()['type']));
+			}
+		}
+
+		return $albums;
+	}
+
+	/**
+	 * @return MusicTrack[]
+	 */
+	public function getTracksForAlbum(int $albumId): array
+	{
+		$serverResponse = $this->connector->get('/library/metadata/' . $albumId . '/children');
+
+		$tracks = [];
+
+		/** @var \SimpleXMLElement $track */
+		foreach ($serverResponse as $track) {
+			switch((string)$track->attributes()['type'])
+			{
+				case 'track':
+					$tracks[] = new MusicTrack(
+						XmlParser::getTrack($track)
+					);
+					break;
+				default:
+					throw new \InvalidArgumentException(sprintf('Album of type %s is not supported', $track->attributes()['type']));
+			}
+		}
+
+		return $tracks;
 	}
 }
