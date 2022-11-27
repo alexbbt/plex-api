@@ -11,7 +11,7 @@ abstract class Media
 	protected string $title;
 	protected string $summary;
 	protected string $year = '';
-	protected string $thumb;
+	protected string $thumb = '';
 	protected string $duration;
 	protected \DateTimeImmutable $createdAt;
 	/** @var array<int, string> */
