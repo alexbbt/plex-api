@@ -31,6 +31,8 @@ To find you plex token, [check this article](https://support.plex.tv/articles/20
 
 Once your `$plexserver` instance created, following methods are available:
 
+* `checkConnection(): bool` Checks if connection can be made to your Plex instance.
+
 * `servers(): array<Server>` Returns the list of active servers for your Plex instance.
    
    Response is an array of `Chindit\Model\Server` objects

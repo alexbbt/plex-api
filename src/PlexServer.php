@@ -32,6 +32,17 @@ class PlexServer
 		$this->connector = new Connector($host, $key, $port, $options);
 	}
 
+    public function checkConnection(): bool
+    {
+        try {
+            $this->connector->get('/');
+        } catch (\Throwable $throwable) {
+            return false;
+        }
+
+        return true;
+    }
+
 	/**
 	 * @return array<Server>
 	 */
