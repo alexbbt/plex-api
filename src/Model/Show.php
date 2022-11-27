@@ -12,7 +12,7 @@ final class Show
     protected string $title;
     protected string $summary;
     protected string $year = '';
-    protected string $thumb;
+    protected string $thumb = '';
     protected \DateTimeImmutable $createdAt;
     /** @var array<int, string> */
     protected array $actors;
