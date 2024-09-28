@@ -239,4 +239,19 @@ class PlexServer
 
 		return $tracks;
 	}
+
+    public function getThumb(string $thumb): string
+    {
+        return $this->connector->getRaw($thumb);
+    }
+
+    public function __toString(): string
+    {
+        return base64_encode($this->connector->export());
+    }
+
+    public static function fromString(string $data): self
+    {
+        return new self(...json_decode(base64_decode($data), true));
+    }
 }

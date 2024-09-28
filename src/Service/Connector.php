@@ -21,7 +21,7 @@ class Connector
 		private string $host,
 		private string $token,
 		private int $port = 32400,
-		array $options = [],
+		private array $options = [],
 	)
 	{
 		$this->connection = HttpClient::create(array_merge([
@@ -30,7 +30,7 @@ class Connector
 			'timeout' => 10,
 			'verify_host' => false,
 			'base_uri' => $this->host . ':' . $this->port,
-		], $options));
+		], $this->options));
 	}
 
 	public function get(string $endpoint): \SimpleXMLElement
@@ -42,4 +42,19 @@ class Connector
 
 		return $response;
 	}
+
+    public function getRaw(string $endpoint): string
+    {
+        return $this->connection->request('GET', $endpoint)->getContent();
+    }
+
+    public function export(): string
+    {
+        return json_encode([
+            'host' => $this->host,
+            'key' => $this->token,
+            'port' => $this->port,
+            'options' => $this->options
+        ]);
+    }
 }
