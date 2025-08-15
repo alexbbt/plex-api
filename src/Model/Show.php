@@ -34,6 +34,15 @@ final class Show
 				$name = 'createdAt';
 				$value = (new \DateTimeImmutable())->setTimestamp((int)$value);
 			}
+
+			// Cast numeric properties to integers
+			if ($name === 'seasonCount' && is_numeric($value)) {
+				$value = (int)$value;
+			}
+			if ($name === 'totalEpisodes' && is_numeric($value)) {
+				$value = (int)$value;
+			}
+
 			if (property_exists($this, $name)) {
 				$this->$name = $value;
 			}

@@ -24,6 +24,15 @@ final class Episode extends Media
 				$name = 'createdAt';
 				$value = (new \DateTimeImmutable())->setTimestamp((int)$value);
 			}
+
+			// Cast numeric properties to integers
+			if ($name === 'season' && is_numeric($value)) {
+				$value = (int)$value;
+			}
+			if ($name === 'episode' && is_numeric($value)) {
+				$value = (int)$value;
+			}
+
 			if (property_exists($this, $name)) {
 				$this->$name = $value;
 			}

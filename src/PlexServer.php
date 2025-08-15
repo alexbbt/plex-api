@@ -169,8 +169,8 @@ class PlexServer
 							XmlParser::getGlobalAttributes($episode),
 							XmlParser::getTechnicalAttributes($episode),
 							[
-								'season' => (string)$episode->attributes()[ 'parentIndex' ],
-								'episode' => (string)$episode->attributes()[ 'index' ],
+								'season' => (int)$episode->attributes()[ 'parentIndex' ],
+								'episode' => (int)$episode->attributes()[ 'index' ],
 							],
 						)
 					);
