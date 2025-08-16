@@ -57,11 +57,11 @@ final class Episode extends Media
 
 	public function getSeason(): int
 	{
-		return $this->season;
+		return $this->season ?? 0;
 	}
 
 	public function getEpisode(): int
 	{
-		return $this->episode;
+		return $this->episode ?? 0;
 	}
 }

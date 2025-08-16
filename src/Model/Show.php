@@ -112,12 +112,12 @@ final class Show
 
 	public function getSeasonCount(): int
 	{
-		return $this->seasonCount;
+		return $this->seasonCount ?? 0;
 	}
 
 	public function getTotalEpisodes(): int
 	{
-		return $this->totalEpisodes;
+		return $this->totalEpisodes ?? 0;
 	}
 
 	/**
