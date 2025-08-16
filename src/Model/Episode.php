@@ -26,10 +26,10 @@ final class Episode extends Media
 			}
 
 			// Cast numeric properties to integers
-			if ($name === 'season' && is_numeric($value)) {
+			if ($name === 'season' && is_string($value)) {
 				$value = (int)$value;
 			}
-			if ($name === 'episode' && is_numeric($value)) {
+			if ($name === 'episode' && is_string($value)) {
 				$value = (int)$value;
 			}
 

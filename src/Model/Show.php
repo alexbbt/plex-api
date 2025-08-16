@@ -36,10 +36,10 @@ final class Show
 			}
 
 			// Cast numeric properties to integers
-			if ($name === 'seasonCount' && is_numeric($value)) {
+			if ($name === 'seasonCount' && is_string($value)) {
 				$value = (int)$value;
 			}
-			if ($name === 'totalEpisodes' && is_numeric($value)) {
+			if ($name === 'totalEpisodes' && is_string($value)) {
 				$value = (int)$value;
 			}
 
